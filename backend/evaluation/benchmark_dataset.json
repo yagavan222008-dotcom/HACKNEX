@@ -1,0 +1,39 @@
+[
+  {
+    "query_id": "eval_01",
+    "query": "Find the red car at the main gate",
+    "expected_camera": "CAM-01",
+    "expected_object": "car",
+    "expected_color": "Red",
+    "expected_timestamp": 42.0
+  },
+  {
+    "query_id": "eval_02",
+    "query": "Find a person in the lobby",
+    "expected_camera": "CAM-03",
+    "expected_object": "person",
+    "expected_timestamp": 128.0
+  },
+  {
+    "query_id": "eval_03",
+    "query": "Find the white car in parking area",
+    "expected_camera": "CAM-02",
+    "expected_object": "car",
+    "expected_color": "White",
+    "expected_timestamp": 76.0
+  },
+  {
+    "query_id": "eval_04",
+    "query": "Find a person carrying a backpack",
+    "expected_camera": "CAM-01",
+    "expected_object": "person",
+    "expected_timestamp": 42.0
+  },
+  {
+    "query_id": "eval_05",
+    "query": "Where did the person go next after main gate?",
+    "expected_camera": "CAM-02",
+    "expected_object": "person",
+    "expected_timestamp": 76.0
+  }
+]

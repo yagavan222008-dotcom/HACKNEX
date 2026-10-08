@@ -1,0 +1,19 @@
+.env
+.env.*
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+venv/
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+intel/
+
+# logs
+*.log
+*.log.*
+logs/
+data/logs/

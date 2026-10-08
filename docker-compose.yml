@@ -1,0 +1,75 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: surveillance_mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: changeme
+      MONGO_INITDB_DB: ai_surveillance
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - surveillance_net
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: surveillance_backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      APP_NAME: "AI-Powered-Surveillance-System"
+      DEBUG: "true"
+      MONGODB_URI: "mongodb://admin:changeme@mongodb:27017/ai_surveillance"
+      MONGO_DB_NAME: "ai_surveillance"
+      ALLOWED_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
+      LLM_PROVIDER: "openai"
+      # OPENAI_API_KEY: set this at runtime
+      ENABLE_SEMANTIC: "true"
+      EMBED_DEVICE: "cpu"
+      LOG_LEVEL: "DEBUG"
+    volumes:
+      - ./backend:/app/backend
+      - ./data:/app/data
+      - surveillance_storage:/app/storage
+    networks:
+      - surveillance_net
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: surveillance_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: "http://localhost:8000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - surveillance_net
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+  surveillance_storage:
+
+networks:
+  surveillance_net:
+    driver: bridge
